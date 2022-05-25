@@ -3,6 +3,7 @@ import json
 
 
 def handler(event, context):
+    phrases = [i for i in range(3)]
     end_ses = 'false'
     if event['state']['session'] == {}:
         object_, text = start()
@@ -10,7 +11,14 @@ def handler(event, context):
         object_ = Game(False, event['state']['session'])
         command_ = event['request']['original_utterance']
         if object_.game_over() is False:
-            text = 'Ты проиграл!'
+            ans = phrases[random.randint(0, 2)]
+            if ans == 0:
+                final = 'Жадность - это плохо'
+            if ans == 1:
+                final = 'Жадность - это скверно'
+            if ans == 2:
+                final = 'Жадность губит флибустьера'
+            text = 'Ты проиграл!' + '\n' + final
             end_ses = 'true'
             object_ = take_card(object_)
         elif command_.lower() == "продолжить":
@@ -21,7 +29,14 @@ def handler(event, context):
         else:
             text = 'Неверная команда.'
     if object_.win_count <= object_.player_counter:
-        text = 'Ты победил!'
+        ans = phrases[random.randint(0, 2)]
+        if ans == 0:
+            final = 'Йо-хо-хо, и бутылка рома'
+        if ans == 1:
+            final = 'Первый после бога – это капитан'
+        if ans == 2:
+            final = 'Хороший разбой лучше плохого причала'
+        text = 'Ты победил!' + '\n' + final
         end_ses = 'true'
     return {
         'version': event['version'],
